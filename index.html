@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LostBullett · Plugins de audio</title>
+<meta name="description" content="NoClipper y AutoReVice: plugins de audio VST3 hechos con JUCE.">
+<style>
+  :root {
+    --bg: #0a0710;
+    --panel: #120c1c;
+    --line: #2a1d3d;
+    --text: #ece6f5;
+    --muted: #9a8fb0;
+    --red: #ff2d55;
+    --purple: #a855f7;
+    --grad: linear-gradient(90deg, var(--red), var(--purple));
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(60rem 30rem at 85% -10%, rgba(168,85,247,.16), transparent 60%),
+      radial-gradient(50rem 30rem at -10% 10%, rgba(255,45,85,.12), transparent 60%);
+    color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+  a { color: inherit; }
+
+  header.top { padding: 20px 0; border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .brand { font-weight: 800; letter-spacing: .18em; font-size: 1rem; text-transform: uppercase; }
+  .brand b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  nav a { text-decoration: none; color: var(--muted); margin-left: 18px; font-size: .9rem; }
+  nav a:hover { color: var(--text); }
+
+  .hero { padding: 64px 0 40px; }
+  .eyebrow { color: var(--muted); font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; }
+  h1 { font-size: clamp(2rem, 7vw, 3.6rem); line-height: 1.1; margin: .4em 0 .3em; }
+  h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { color: var(--muted); max-width: 40rem; font-size: 1.05rem; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+  .tags li { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: .8rem; color: var(--muted); }
+
+  section.plugin { padding: 40px 0; border-top: 1px solid var(--line); }
+  .num { color: var(--red); font-size: .8rem; letter-spacing: .2em; }
+  h2 { font-size: clamp(1.6rem, 5vw, 2.3rem); margin: .2em 0 .1em; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .card img { display: block; width: 100%; height: auto; border-radius: 8px; }
+
+  .cols { display: grid; gap: 24px; grid-template-columns: 1fr; margin-top: 24px; }
+  @media (min-width: 760px) { .cols { grid-template-columns: 1fr 1fr; } }
+  h3 { margin: 0 0 8px; font-size: 1rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  ul.feat { margin: 0; padding-left: 1.1em; }
+  ul.feat li { margin: 6px 0; }
+  ul.feat b { color: var(--text); }
+  .muted { color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+  .steps li { counter-increment: s; padding-left: 2.2rem; position: relative; margin: 10px 0; }
+  .steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 0;
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    display: grid; place-items: center; font-size: .8rem; font-weight: 700;
+    background: var(--grad); color: #fff;
+  }
+
+  /* Curva interactiva */
+  .curve-box { display: grid; gap: 16px; }
+  svg.curve { width: 100%; height: auto; display: block; background: #0d0814; border-radius: 8px; }
+  .ctrl { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ctrl label { font-size: .85rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+  .ctrl output { min-width: 5.5em; font-variant-numeric: tabular-nums; }
+  input[type=range] { flex: 1 1 160px; accent-color: var(--red); min-height: 32px; }
+
+  .note { border-left: 3px solid var(--purple); padding: 8px 14px; background: rgba(168,85,247,.08); border-radius: 0 8px 8px 0; margin-top: 20px; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Lost<b>Bullett</b></div>
+    <nav>
+      <a href="#noclipper">NoClipper</a>
+      <a href="#autorevice">AutoReVice</a>
+      <a href="#descargas">Descargas</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Plugins de audio // VST3 · AU</div>
+    <h1>Dos plugins hechos para <span>sonar bien</span> y estorbar poco.</h1>
+    <p>Un soft clipper con la curva de FL Studio y un reverb + delay que se aparta cuando tocas o cantas y florece cuando paras. Hechos con JUCE y C++.</p>
+    <ul class="tags">
+      <li>VST3</li>
+      <li>AU (Mac)</li>
+      <li>Windows</li>
+      <li>macOS</li>
+      <li>C++ / JUCE 8</li>
+    </ul>
+  </div>
+
+  <!-- ===================== NoClipper ===================== -->
+  <section class="plugin" id="noclipper">
+    <div class="num">01</div>
+    <h2>NoClipper</h2>
+    <p class="sub">Soft clipper estilo FL Studio</p>
+
+    <div class="card curve-box" aria-label="Curva de saturación interactiva">
+      <svg class="curve" id="curve" viewBox="0 0 400 400" role="img" aria-label="Gráfico de la curva de saturación"></svg>
+      <div class="ctrl">
+        <label for="thres">THRES</label>
+        <input type="range" id="thres" min="0.2" max="0.98" step="0.01" value="0.78">
+        <output id="thresOut"></output>
+      </div>
+      <div class="muted" style="font-size:.85rem">
+        Mueve el umbral. Hasta ese nivel la señal pasa intacta (línea recta); por encima se suaviza en vez de cortarse de golpe.
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Controles</h3>
+        <ul class="feat">
+          <li><b>THRES</b>: umbral en dBFS donde empieza la saturación suave.</li>
+          <li><b>POST</b>: ganancia después del clipper (80 % = 0 dB, igual que en FL).</li>
+          <li><b>Medidor</b> de salida L/R y gráfico de la curva en tiempo real.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Detalles</h3>
+        <ul class="feat">
+          <li>La curva se midió con exportaciones reales del Soft Clipper de FL, con error máximo cercano a -86 dB.</li>
+          <li>Umbral por defecto igual que en FL: 100/128 (-2,14 dBFS).</li>
+          <li>Funciona en cualquier DAW que cargue VST3 o AU.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== AutoReVice ===================== -->
+  <section class="plugin" id="autorevice">
+    <div class="num">02</div>
+    <h2>AutoReVice</h2>
+    <p class="sub">Reverb + delay con ducking automático</p>
+
+    <div class="card">
+      <img src="assets/autorevice.png" width="980" height="620" alt="Interfaz de AutoReVice: secciones de ducking automático, delay, reverb, salida y monitor de nivel">
+    </div>
+
+    <p style="margin-top:20px">Los efectos <b>se esconden mientras entra señal</b> y aparecen solo cuando te callas. Es lo que normalmente se logra con un compresor en sidechain sobre el bus de efectos, pero automático: el plugin escucha su propia entrada, así que no hay que rutear nada en el DAW.</p>
+
+    <div class="cols">
+      <div>
+        <h3>Cómo funciona</h3>
+        <ol class="steps">
+          <li>Un detector rápido mide el nivel de la señal seca.</li>
+          <li>Si pasa el <b>Umbral</b>, los efectos bajan según <b>Profundidad</b> y <b>Ataque</b>.</li>
+          <li>Al callarte, espera el <b>Hold</b> y los efectos suben con el <b>Release</b>.</li>
+          <li>Delay y reverb siguen recibiendo señal siempre; solo se atenúa su salida. Por eso oyes la cola completa.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Qué trae</h3>
+        <ul class="feat">
+          <li><b>Delay</b> libre o sincronizado al tempo (1/1 a 1/32, puntillo y tresillo), ping-pong y filtros en el lazo.</li>
+          <li><b>Reverb</b> con pre-delay, tamaño, damping y amplitud.</li>
+          <li><b>Formatos</b>: VST3, AU (Mac), CLAP, LV2 (Linux) y Standalone.</li>
+        </ul>
+        <div class="note"><b>Para voces:</b> Umbral -40 dB, Profundidad 100 %, Ataque 5 ms, Hold 80 ms, Release 400 ms, delay 1/8 con puntillo.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Descargas ===================== -->
+  <section class="plugin" id="descargas">
+    <div class="num">03</div>
+    <h2>Descargas</h2>
+    <p class="sub">Todavía no hay descargas públicas.</p>
+    <div class="card">
+      <p style="margin-top:0">Los dos plugins se compilan automáticamente para Windows y Mac (AutoReVice también para Linux) con GitHub Actions. Por ahora el código está en repositorios privados, así que aún no hay enlaces de descarga aquí.</p>
+      <p style="margin-bottom:0" class="muted">Cuando haya versiones listas para compartir, aparecerán en esta sección.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    LostBullett · Plugins de audio hechos con JUCE. Los nombres de programas de terceros se mencionan solo como referencia.
+  </div>
+</footer>
+
+<script>
+(function () {
+  var svg = document.getElementById('curve');
+  var range = document.getElementById('thres');
+  var out = document.getElementById('thresOut');
+  var NS = 'http://www.w3.org/2000/svg';
+  var S = 400, PAD = 30, MAXIN = 1.5, MAXOUT = 1.2; // rango del dibujo
+
+  function clip(x, T) {
+    var a = Math.abs(x);
+    if (a <= T) return x;
+    var y = T + (1 - T) * (1 - Math.exp(-(a - T) / (1 - T)));
+    return x < 0 ? -y : y;
+  }
+  function X(v) { return PAD + (v / MAXIN) * (S - 2 * PAD); }
+  function Y(v) { return S - PAD - (v / MAXOUT) * (S - 2 * PAD); }
+  function el(name, attrs) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function draw() {
+    var T = parseFloat(range.value);
+    var db = 20 * Math.log10(T);
+    out.textContent = db.toFixed(1) + ' dB';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    var defs = el('defs', {});
+    var g = el('linearGradient', { id: 'g', x1: 0, y1: 1, x2: 1, y2: 0 });
+    g.appendChild(el('stop', { offset: '0', 'stop-color': '#ff2d55' }));
+    g.appendChild(el('stop', { offset: '1', 'stop-color': '#a855f7' }));
+    defs.appendChild(g);
+    svg.appendChild(defs);
+
+    // cuadrícula
+    for (var i = 0; i <= 5; i++) {
+      var p = PAD + i * (S - 2 * PAD) / 5;
+      svg.appendChild(el('line', { x1: p, y1: PAD, x2: p, y2: S - PAD, stroke: '#2a1d3d', 'stroke-width': 1 }));
+      svg.appendChild(el('line', { x1: PAD, y1: p, x2: S - PAD, y2: p, stroke: '#2a1d3d', 'stroke-width': 1 }));
+    }
+    // recta de referencia (sin procesar)
+    svg.appendChild(el('line', { x1: X(0), y1: Y(0), x2: X(MAXOUT), y2: Y(MAXOUT), stroke: '#4a3a62', 'stroke-width': 1.5, 'stroke-dasharray': '5 5' }));
+    // línea del umbral
+    svg.appendChild(el('line', { x1: X(T), y1: Y(0), x2: X(T), y2: Y(MAXOUT), stroke: '#ff2d55', 'stroke-width': 1, 'stroke-dasharray': '3 4', opacity: .7 }));
+
+    // curva
+    var d = '';
+    for (var n = 0; n <= 200; n++) {
+      var x = (n / 200) * MAXIN;
+      d += (n === 0 ? 'M' : 'L') + X(x).toFixed(1) + ' ' + Y(clip(x, T)).toFixed(1) + ' ';
+    }
+    svg.appendChild(el('path', { d: d, fill: 'none', stroke: 'url(#g)', 'stroke-width': 3.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+
+    function txt(x, y, s, anchor) {
+      var t = el('text', { x: x, y: y, fill: '#9a8fb0', 'font-size': 11, 'text-anchor': anchor || 'start', 'font-family': 'system-ui, sans-serif' });
+      t.textContent = s;
+      svg.appendChild(t);
+    }
+    txt(S - PAD, S - 10, 'ENTRADA', 'end');
+    txt(PAD + 4, PAD - 10, 'SALIDA');
+    txt(X(T) + 6, Y(MAXOUT) + 14, 'umbral');
+  }
+
+  range.addEventListener('input', draw);
+  draw();
+})();
+</script>
+</body>
+</html>
