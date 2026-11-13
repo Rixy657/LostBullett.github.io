@@ -86,6 +86,16 @@
 
   .note { border-left: 3px solid var(--purple); padding: 8px 14px; background: rgba(168,85,247,.08); border-radius: 0 8px 8px 0; margin-top: 20px; }
 
+  .dl { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .dl { grid-template-columns: 1fr 1fr; } }
+  .dl h3 { color: var(--text); font-size: 1.1rem; letter-spacing: .04em; margin-bottom: 4px; }
+  .dl p { margin: 0 0 14px; }
+  .btn {
+    display: inline-block; text-decoration: none; font-weight: 700;
+    padding: 10px 20px; border-radius: 999px; background: var(--grad); color: #fff;
+  }
+  .btn:hover { filter: brightness(1.12); }
+
   footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--muted); font-size: .85rem; }
 </style>
 </head>
@@ -193,11 +203,23 @@
   <section class="plugin" id="descargas">
     <div class="num">03</div>
     <h2>Descargas</h2>
-    <p class="sub">Todavía no hay descargas públicas.</p>
-    <div class="card">
-      <p style="margin-top:0">Los dos plugins se compilan automáticamente para Windows y Mac (AutoReVice también para Linux) con GitHub Actions. Por ahora el código está en repositorios privados, así que aún no hay enlaces de descarga aquí.</p>
-      <p style="margin-bottom:0" class="muted">Cuando haya versiones listas para compartir, aparecerán en esta sección.</p>
+    <p class="sub">Gratis. Descarga el .zip de tu sistema, copia el plugin a tu carpeta de VST3 y reescanea plugins en tu DAW.</p>
+    <div class="dl">
+      <div class="card">
+        <h3>NoClipper</h3>
+        <p class="muted">VST3 · AU (Mac) · Windows y macOS</p>
+        <a class="btn" href="https://github.com/Rixy657/Descargas/releases" rel="noopener">Descargar</a>
+      </div>
+      <div class="card">
+        <h3>AutoReVice</h3>
+        <p class="muted">VST3 · AU · CLAP · LV2 · Windows, macOS y Linux</p>
+        <a class="btn" href="https://github.com/Rixy657/Descargas/releases" rel="noopener">Descargar</a>
+      </div>
     </div>
+    <p class="muted" style="margin-top:16px;font-size:.85rem">
+      Windows: copia el plugin a <code>C:\Program Files\Common Files\VST3\</code> ·
+      Mac: <code>~/Library/Audio/Plug-Ins/VST3/</code>
+    </p>
   </section>
 
 </main>
