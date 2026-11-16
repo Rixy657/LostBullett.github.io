@@ -4,14 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ViceMusic657 · Plugins de audio</title>
-<meta name="description" content="Descarga NoClipper y AutoReVice: plugins de audio VST3, AU y CLAP para Windows, Mac y Linux, hechos con JUCE.">
+<meta name="description" content="Plugins de audio de ViceMusic: NoClipper, AutoReVice, MoreSubstance, GuitarTowers y GPoint. VST3, AU y CLAP para Windows, Mac y Linux.">
 <style>
   :root {
-    --bg: #0a0710;
-    --panel: #120c1c;
-    --line: #2a1d3d;
-    --text: #ece6f5;
-    --muted: #9a8fb0;
+    --bg: #08060d;
+    --panel: #120d1a;
+    --panel2: #0d0913;
+    --line: #2a1f38;
+    --text: #efe9f7;
+    --muted: #9b90b0;
     --red: #ff2d55;
     --purple: #a855f7;
     --grad: linear-gradient(90deg, var(--red), var(--purple));
@@ -22,109 +23,149 @@
     margin: 0;
     background: var(--bg);
     background-image:
-      radial-gradient(60rem 30rem at 85% -10%, rgba(168,85,247,.16), transparent 60%),
-      radial-gradient(50rem 30rem at -10% 10%, rgba(255,45,85,.12), transparent 60%);
+      radial-gradient(60rem 30rem at 85% -10%, rgba(168,85,247,.14), transparent 60%),
+      radial-gradient(50rem 30rem at -10% 5%, rgba(255,45,85,.10), transparent 60%);
     color: var(--text);
     font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
   a { color: inherit; }
 
-  header.top { padding: 20px 0; border-bottom: 1px solid var(--line); }
-  header.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .brand { font-weight: 800; letter-spacing: .18em; font-size: 1rem; text-transform: uppercase; }
+  header.top { position: sticky; top: 0; z-index: 10; background: rgba(8,6,13,.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 60px; }
+  .brand { font-weight: 800; letter-spacing: .18em; font-size: .95rem; text-transform: uppercase; text-decoration: none; }
   .brand b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   nav a { text-decoration: none; color: var(--muted); margin-left: 18px; font-size: .9rem; }
   nav a:hover { color: var(--text); }
 
-  .hero { padding: 64px 0 40px; }
-  .eyebrow { color: var(--muted); font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; }
-  h1 { font-size: clamp(2rem, 7vw, 3.6rem); line-height: 1.1; margin: .4em 0 .3em; }
+  .hero { padding: 64px 0 28px; }
+  .eyebrow { color: var(--muted); font-size: .78rem; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { font-size: clamp(2.1rem, 7vw, 3.8rem); line-height: 1.05; margin: .35em 0 .3em; }
   h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .hero p { color: var(--muted); max-width: 40rem; font-size: 1.05rem; }
+  .hero p { color: var(--muted); max-width: 42rem; font-size: 1.05rem; margin: 0; }
 
-  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
-  .tags li { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: .8rem; color: var(--muted); }
-
-  section.plugin { padding: 40px 0; border-top: 1px solid var(--line); }
-  .num { color: var(--red); font-size: .8rem; letter-spacing: .2em; }
-  h2 { font-size: clamp(1.6rem, 5vw, 2.3rem); margin: .2em 0 .1em; }
-  .sub { color: var(--muted); margin: 0 0 20px; }
-
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 16px;
+  .catalog { display: grid; gap: 14px; grid-template-columns: 1fr; padding: 28px 0 56px; }
+  @media (min-width: 640px) { .catalog { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .catalog { grid-template-columns: repeat(5, 1fr); } }
+  a.tile {
+    display: flex; flex-direction: column; gap: 6px; text-decoration: none;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 10%, var(--panel)), var(--panel2));
+    border: 1px solid var(--line); border-top: 3px solid var(--acc);
+    border-radius: 14px; padding: 16px; min-height: 150px;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
   }
+  a.tile:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--acc) 60%, var(--line)); box-shadow: 0 10px 30px color-mix(in srgb, var(--acc) 18%, transparent); }
+  .tile .kind { color: var(--acc); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; }
+  .tile strong { font-size: 1.2rem; }
+  .tile span.d { color: var(--muted); font-size: .88rem; line-height: 1.45; flex: 1; }
+
+  .chip { align-self: flex-start; font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; border-radius: 999px; padding: 2px 10px; border: 1px solid; }
+  .chip.ok { color: #4ade80; border-color: rgba(74,222,128,.4); }
+  .chip.test { color: #fbbf24; border-color: rgba(251,191,36,.4); }
+
+  section.plugin { padding: 56px 0; border-top: 1px solid var(--line); scroll-margin-top: 60px; }
+  .num { color: var(--acc); font-size: .8rem; letter-spacing: .2em; }
+  h2 { font-size: clamp(1.8rem, 5.5vw, 2.6rem); margin: .15em 0 .05em; line-height: 1.1; }
+  .sub { color: var(--muted); margin: 0 0 22px; font-size: 1.02rem; }
+  .head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
   .card img { display: block; width: 100%; height: auto; border-radius: 8px; }
+  .visual { border-color: color-mix(in srgb, var(--acc) 35%, var(--line)); box-shadow: 0 20px 50px color-mix(in srgb, var(--acc) 10%, transparent); }
+  .hint { color: var(--muted); font-size: .84rem; margin-top: 10px; }
 
   .cols { display: grid; gap: 24px; grid-template-columns: 1fr; margin-top: 24px; }
   @media (min-width: 760px) { .cols { grid-template-columns: 1fr 1fr; } }
-  h3 { margin: 0 0 8px; font-size: 1rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  h3 { margin: 0 0 8px; font-size: .92rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
   ul.feat { margin: 0; padding-left: 1.1em; }
   ul.feat li { margin: 6px 0; }
-  ul.feat b { color: var(--text); }
-  .muted { color: var(--muted); }
+  ul.feat li::marker { color: var(--acc); }
+  .note { border-left: 3px solid var(--acc); padding: 8px 14px; background: color-mix(in srgb, var(--acc) 8%, transparent); border-radius: 0 8px 8px 0; margin-top: 20px; }
 
   .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }
   .steps li { counter-increment: s; padding-left: 2.2rem; position: relative; margin: 10px 0; }
-  .steps li::before {
-    content: counter(s); position: absolute; left: 0; top: 0;
-    width: 1.6rem; height: 1.6rem; border-radius: 50%;
-    display: grid; place-items: center; font-size: .8rem; font-weight: 700;
-    background: var(--grad); color: #fff;
-  }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; font-size: .8rem; font-weight: 700; background: var(--acc); color: #fff; }
 
-  /* Curva interactiva */
-  .curve-box { display: grid; gap: 16px; }
   svg.curve { width: 100%; height: auto; display: block; background: #0d0814; border-radius: 8px; }
-  .ctrl { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ctrl { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
   .ctrl label { font-size: .85rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
   .ctrl output { min-width: 5.5em; font-variant-numeric: tabular-nums; }
-  input[type=range] { flex: 1 1 160px; accent-color: var(--red); min-height: 32px; }
+  input[type=range] { flex: 1 1 160px; accent-color: var(--acc); min-height: 32px; }
 
-  .note { border-left: 3px solid var(--purple); padding: 8px 14px; background: rgba(168,85,247,.08); border-radius: 0 8px 8px 0; margin-top: 20px; }
+  .islands { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 640px) { .islands { grid-template-columns: repeat(4, 1fr); } }
+  button.isle {
+    font: inherit; color: var(--muted); text-align: left; cursor: pointer;
+    background: linear-gradient(180deg, #17101f, #0c0812); border: 1px solid #2c2140; border-radius: 12px;
+    padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,.6); transition: all .15s ease;
+  }
+  button.isle small { font-size: .7rem; letter-spacing: .15em; opacity: .7; }
+  button.isle b { font-size: .98rem; display: flex; align-items: center; gap: 8px; }
+  button.isle b::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #3a2d4d; flex: none; }
+  button.isle.on { color: var(--text); border-color: var(--acc); background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 22%, #17101f), #0c0812); box-shadow: 0 0 18px color-mix(in srgb, var(--acc) 35%, transparent), inset 0 1px 0 rgba(255,255,255,.08); }
+  button.isle.on b::before { background: var(--acc); box-shadow: 0 0 8px var(--acc); }
 
-  /* Descargas */
-  .dl-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+  .gt-screen { background: radial-gradient(ellipse at top, #241a0c, #0d0a06); border-radius: 10px; padding: 14px; }
+  .gt-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .chord { font-size: 2.2rem; font-weight: 800; color: var(--acc); text-shadow: 0 0 18px color-mix(in srgb, var(--acc) 50%, transparent); }
+  .gt-notes { color: var(--muted); font-size: .85rem; letter-spacing: .1em; }
+  svg.strings { width: 100%; height: auto; display: block; margin-top: 8px; }
+  svg.strings line { stroke: #c9a86a; stroke-linecap: round; }
+  svg.strings line.hit { animation: vib .9s ease-out; stroke: var(--acc); }
+  @keyframes vib { 0%,100% { transform: translateY(0); } 10% { transform: translateY(-3px); } 20% { transform: translateY(3px); } 30% { transform: translateY(-2px); } 45% { transform: translateY(1.5px); } 60% { transform: translateY(-1px); } }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  button.key {
+    font: inherit; font-size: .88rem; cursor: pointer; color: var(--text);
+    background: linear-gradient(180deg, #2a2219, #15110c); border: 1px solid #3a2f22; border-bottom-width: 4px;
+    border-radius: 8px; padding: 8px 14px; min-height: 44px;
+  }
+  button.key:active { transform: translateY(2px); border-bottom-width: 2px; }
+  button.key.sel { border-color: var(--acc); color: var(--acc); }
+
+  svg.spec { width: 100%; height: auto; display: block; background: radial-gradient(ellipse at bottom, #08202a, #050b10); border-radius: 10px; touch-action: none; }
+  svg.spec .orb { cursor: grab; }
+
+  .dl-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
   @media (min-width: 760px) { .dl-grid { grid-template-columns: 1fr 1fr; } }
+  .dl-card { border-top: 3px solid var(--acc); }
   .dl-card h3 { color: var(--text); font-size: 1.15rem; letter-spacing: 0; text-transform: none; margin-bottom: 2px; }
   .dl-card .fmt { color: var(--muted); font-size: .85rem; margin: 0 0 14px; }
   .btns { display: grid; gap: 10px; }
   a.btn {
     display: flex; justify-content: space-between; align-items: center; gap: 10px;
     min-height: 48px; padding: 10px 16px; border-radius: 10px; text-decoration: none;
-    background: var(--grad); color: #fff; font-weight: 700;
-    transition: transform .15s ease, box-shadow .15s ease;
+    background: var(--acc); color: #fff; font-weight: 700; transition: transform .15s ease, filter .15s ease;
   }
-  a.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(255,45,85,.25); }
+  a.btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
   a.btn.alt { background: transparent; border: 1px solid var(--line); color: var(--text); font-weight: 600; }
-  a.btn.alt:hover { border-color: var(--purple); box-shadow: none; }
-  a.btn.off { background: #1b1328; border: 1px dashed var(--line); color: var(--muted); pointer-events: none; }
+  a.btn.alt:hover { border-color: var(--acc); }
   a.btn small { font-weight: 400; opacity: .8; font-size: .8rem; }
+  a.btn.off { background: #1b1328; border: 1px dashed var(--line); color: var(--muted); pointer-events: none; }
+  .soon-dl { color: var(--muted); font-size: .92rem; margin: 0; }
   details.install { margin-top: 24px; }
-  details.install summary { cursor: pointer; font-weight: 700; padding: 12px 0; min-height: 44px; }
+  details.install summary { cursor: pointer; font-weight: 700; padding: 10px 0; min-height: 44px; }
   code { background: #1b1328; border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; font-size: .85em; word-break: break-all; }
-  .soon-grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 8px; }
-  @media (min-width: 760px) { .soon-grid { grid-template-columns: repeat(3, 1fr); } }
-  .soon h3 { color: var(--text); letter-spacing: 0; text-transform: none; font-size: 1.1rem; }
-  .soon p { margin: 0; color: var(--muted); font-size: .92rem; }
-  .pill { display: inline-block; font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: var(--red); border: 1px solid rgba(255,45,85,.4); border-radius: 999px; padding: 2px 10px; margin-bottom: 10px; }
 
   footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--muted); font-size: .85rem; }
+
+  /* Color de acento de cada plugin */
+  body, .c-noclipper { --acc: #ff2d55; }
+  .c-autorevice { --acc: #e0338f; }
+  .c-moresub    { --acc: #a855f7; }
+  .c-guitar     { --acc: #ffb547; }
+  .c-gpoint     { --acc: #33e4ff; }
+  .c-guitar a.btn, .c-gpoint a.btn, .c-guitar .steps li::before { color: #111; }
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="wrap">
-    <div class="brand">Vice<b>Music657</b></div>
+    <a class="brand" href="#">Vice<b>Music657</b></a>
     <nav>
-      <a href="#noclipper">NoClipper</a>
-      <a href="#autorevice">AutoReVice</a>
+      <a href="#plugins">Plugins</a>
       <a href="#descargas">Descargas</a>
-      <a href="#pronto">Próximamente</a>
     </nav>
   </div>
 </header>
@@ -132,99 +173,240 @@
 <main class="wrap">
 
   <div class="hero">
-    <div class="eyebrow">Plugins de audio // VST3 · AU</div>
-    <h1>Dos plugins hechos para <span>sonar bien</span> y estorbar poco.</h1>
-    <p>Un soft clipper con la curva de FL Studio y un reverb + delay que se aparta cuando tocas o cantas y florece cuando paras. Hechos con JUCE y C++.</p>
-    <p style="margin-top:22px"><a class="btn" href="#descargas" style="display:inline-flex">Descargar plugins</a></p>
-    <ul class="tags">
-      <li>VST3</li>
-      <li>AU (Mac)</li>
-      <li>Windows</li>
-      <li>macOS</li>
-      <li>C++ / JUCE 8</li>
-    </ul>
+    <div class="eyebrow">Plugins de audio // VST3 · AU · CLAP</div>
+    <h1>Plugins para que tu música <span>suene distinta</span>.</h1>
+    <p>Cinco herramientas para voces, beats y guitarras: saturación, efectos que se apartan solos, ear candy, acordes rasgueados y color armónico. Hechas con JUCE y pensadas para FL Studio, pero funcionan en cualquier DAW.</p>
+  </div>
+
+  <!-- ===================== Catálogo ===================== -->
+  <div class="catalog" id="plugins">
+    <a class="tile c-noclipper" href="#noclipper">
+      <span class="kind">Saturación</span>
+      <strong>NoClipper</strong>
+      <span class="d">Soft clipper con la curva de FL Studio, en cualquier DAW.</span>
+      <span class="chip ok">Listo</span>
+    </a>
+    <a class="tile c-autorevice" href="#autorevice">
+      <span class="kind">Reverb + Delay</span>
+      <strong>AutoReVice</strong>
+      <span class="d">Efectos que se esconden cuando cantas y aparecen al callarte.</span>
+      <span class="chip ok">Listo</span>
+    </a>
+    <a class="tile c-moresub" href="#moresubstance">
+      <span class="kind">Ear candy · Voz</span>
+      <strong>MoreSubstance</strong>
+      <span class="d">8 efectos en islas que puedes prender al mismo tiempo.</span>
+      <span class="chip test">En pruebas</span>
+    </a>
+    <a class="tile c-guitar" href="#guitartowers">
+      <span class="kind">Instrumento</span>
+      <strong>GuitarTowers</strong>
+      <span class="d">Escribe acordes en el piano roll y el plugin los rasguea.</span>
+      <span class="chip test">En pruebas</span>
+    </a>
+    <a class="tile c-gpoint" href="#gpoint">
+      <span class="kind">Armónicos · Voz</span>
+      <strong>GPoint</strong>
+      <span class="d">Encuentra el punto de color de tu voz y satúralo solo ahí.</span>
+      <span class="chip test">En pruebas</span>
+    </a>
   </div>
 
   <!-- ===================== NoClipper ===================== -->
-  <section class="plugin" id="noclipper">
-    <div class="num">01</div>
-    <h2>NoClipper</h2>
-    <p class="sub">Soft clipper estilo FL Studio</p>
+  <section class="plugin c-noclipper" id="noclipper">
+    <div class="num">01 // SATURACIÓN</div>
+    <div class="head"><h2>NoClipper</h2><span class="chip ok">Listo</span></div>
+    <p class="sub">El Soft Clipper de FL Studio, para cualquier DAW.</p>
 
-    <div class="card curve-box" aria-label="Curva de saturación interactiva">
-      <svg class="curve" id="curve" viewBox="0 0 400 400" role="img" aria-label="Gráfico de la curva de saturación"></svg>
+    <div class="card visual">
+      <svg class="curve" id="curve" viewBox="0 0 400 300" role="img" aria-label="Curva de saturación interactiva"></svg>
       <div class="ctrl">
         <label for="thres">THRES</label>
         <input type="range" id="thres" min="0.2" max="0.98" step="0.01" value="0.78">
         <output id="thresOut"></output>
       </div>
-      <div class="muted" style="font-size:.85rem">
-        Mueve el umbral. Hasta ese nivel la señal pasa intacta (línea recta); por encima se suaviza en vez de cortarse de golpe.
-      </div>
+      <div class="hint">Mueve el umbral: hasta ahí la señal pasa intacta; por encima se redondea en vez de cortarse de golpe.</div>
     </div>
 
     <div class="cols">
       <div>
         <h3>Controles</h3>
         <ul class="feat">
-          <li><b>THRES</b>: umbral en dBFS donde empieza la saturación suave.</li>
-          <li><b>POST</b>: ganancia después del clipper (80 % = 0 dB, igual que en FL).</li>
-          <li><b>Medidor</b> de salida L/R y gráfico de la curva en tiempo real.</li>
+          <li><b>THRES</b>: dónde empieza la saturación suave.</li>
+          <li><b>POST</b>: volumen después del clipper (80 % = 0 dB, igual que en FL).</li>
+          <li>Medidor de salida y la curva en tiempo real.</li>
         </ul>
       </div>
       <div>
         <h3>Detalles</h3>
         <ul class="feat">
-          <li>La curva se midió con exportaciones reales del Soft Clipper de FL, con error máximo cercano a -86 dB.</li>
-          <li>Umbral por defecto igual que en FL: 100/128 (-2,14 dBFS).</li>
-          <li>Funciona en cualquier DAW que cargue VST3 o AU.</li>
+          <li>Curva medida con exportaciones reales del Soft Clipper de FL (error cercano a -86 dB).</li>
+          <li>Umbral por defecto igual que en FL: -2,14 dBFS.</li>
+          <li>VST3 para Windows y Mac, AU para Mac.</li>
         </ul>
       </div>
     </div>
   </section>
 
   <!-- ===================== AutoReVice ===================== -->
-  <section class="plugin" id="autorevice">
-    <div class="num">02</div>
-    <h2>AutoReVice</h2>
-    <p class="sub">Reverb + delay con ducking automático</p>
+  <section class="plugin c-autorevice" id="autorevice">
+    <div class="num">02 // REVERB + DELAY</div>
+    <div class="head"><h2>AutoReVice</h2><span class="chip ok">Listo</span></div>
+    <p class="sub">Los efectos se apartan mientras cantas y florecen cuando paras.</p>
 
-    <div class="card">
-      <img src="assets/autorevice.png" width="980" height="620" alt="Interfaz de AutoReVice: secciones de ducking automático, delay, reverb, salida y monitor de nivel">
+    <div class="card visual">
+      <img src="assets/autorevice.png" width="980" height="620" alt="Interfaz de AutoReVice: ducking automático, delay, reverb, salida y monitor">
     </div>
-
-    <p style="margin-top:20px">Los efectos <b>se esconden mientras entra señal</b> y aparecen solo cuando te callas. Es lo que normalmente se logra con un compresor en sidechain sobre el bus de efectos, pero automático: el plugin escucha su propia entrada, así que no hay que rutear nada en el DAW.</p>
 
     <div class="cols">
       <div>
         <h3>Cómo funciona</h3>
         <ol class="steps">
-          <li>Un detector rápido mide el nivel de la señal seca.</li>
-          <li>Si pasa el <b>Umbral</b>, los efectos bajan según <b>Profundidad</b> y <b>Ataque</b>.</li>
-          <li>Al callarte, espera el <b>Hold</b> y los efectos suben con el <b>Release</b>.</li>
-          <li>Delay y reverb siguen recibiendo señal siempre; solo se atenúa su salida. Por eso oyes la cola completa.</li>
+          <li>El plugin escucha tu voz seca.</li>
+          <li>Si pasa el <b>Umbral</b>, baja el delay y la reverb.</li>
+          <li>Al callarte, espera el <b>Hold</b> y los efectos vuelven con el <b>Release</b>.</li>
+          <li>Las colas nunca se cortan: solo se baja su volumen.</li>
         </ol>
       </div>
       <div>
         <h3>Qué trae</h3>
         <ul class="feat">
-          <li><b>Delay</b> libre o sincronizado al tempo (1/1 a 1/32, puntillo y tresillo), ping-pong y filtros en el lazo.</li>
-          <li><b>Reverb</b> con pre-delay, tamaño, damping y amplitud.</li>
-          <li><b>Formatos</b>: VST3, AU (Mac), CLAP, LV2 (Linux) y Standalone.</li>
+          <li>Delay libre o al tempo (1/1 a 1/32, puntillo, tresillo), ping-pong y filtros.</li>
+          <li>Reverb con pre-delay, tamaño, damping y amplitud.</li>
+          <li>Sin sidechain ni ruteos: todo pasa dentro del plugin.</li>
         </ul>
         <div class="note"><b>Para voces:</b> Umbral -40 dB, Profundidad 100 %, Ataque 5 ms, Hold 80 ms, Release 400 ms, delay 1/8 con puntillo.</div>
       </div>
     </div>
   </section>
 
+  <!-- ===================== MoreSubstance ===================== -->
+  <section class="plugin c-moresub" id="moresubstance">
+    <div class="num">03 // EAR CANDY</div>
+    <div class="head"><h2>MoreSubstance</h2><span class="chip test">En pruebas</span></div>
+    <p class="sub">8 efectos para la voz, cada uno en su propia isla. Lo pones una vez y vas prendiendo islas en cada parte del tema.</p>
+
+    <div class="card visual">
+      <div class="islands" id="islands">
+        <button class="isle on"><small>01</small><b>Phone+</b></button>
+        <button class="isle"><small>02</small><b>Octave</b></button>
+        <button class="isle on"><small>03</small><b>Filter Sweep</b></button>
+        <button class="isle"><small>04</small><b>Stutter</b></button>
+        <button class="isle"><small>05</small><b>Tape Stop</b></button>
+        <button class="isle on"><small>06</small><b>Delay Throw</b></button>
+        <button class="isle"><small>07</small><b>Reverse</b></button>
+        <button class="isle"><small>08</small><b>Freeze</b></button>
+      </div>
+      <div class="hint">Toca las islas para prenderlas: en el plugin pueden sonar todas a la vez y cada botón ON se automatiza.</div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Las islas</h3>
+        <ul class="feat">
+          <li><b>Phone+</b>: teléfono con señal rota (barras 1-5, wobble, cortes).</li>
+          <li><b>Octave</b>: una o dos octavas abajo. <b>Filter Sweep</b>: pad XY y barrido al tempo.</li>
+          <li><b>Stutter</b> y <b>Tape Stop</b>: cortes rítmicos y frenada de cinta.</li>
+          <li><b>Delay Throw</b>, <b>Reverse</b> y <b>Freeze</b>: ecos, entradas al revés y colas congeladas.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Pensado para</h3>
+        <ul class="feat">
+          <li>Adornos entremedio de la canción sin abrir 8 plugins distintos.</li>
+          <li>Automatizar cada isla en el playlist de FL Studio.</li>
+          <li>Interfaz de rack futurista que se agranda arrastrando la esquina.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GuitarTowers ===================== -->
+  <section class="plugin c-guitar" id="guitartowers">
+    <div class="num">04 // INSTRUMENTO</div>
+    <div class="head"><h2>GuitarTowers</h2><span class="chip test">En pruebas</span></div>
+    <p class="sub">Escribe el acorde en el piano roll y GuitarTowers lo rasguea como una guitarra de verdad.</p>
+
+    <div class="card visual">
+      <div class="gt-screen">
+        <div class="gt-top">
+          <span class="chord" id="chord">Am7</span>
+          <span class="gt-notes" id="chordNotes">A · E · G · C · E</span>
+        </div>
+        <svg class="strings" id="strings" viewBox="0 0 400 130" aria-label="Las 6 cuerdas"></svg>
+      </div>
+      <div class="row" id="chords">
+        <button class="key sel" data-c="Am7" data-n="A · E · G · C · E">Am7</button>
+        <button class="key" data-c="C" data-n="C · E · G · C · E">C</button>
+        <button class="key" data-c="G" data-n="G · B · D · G · B · G">G</button>
+        <button class="key" data-c="Fmaj7" data-n="F · A · C · E">Fmaj7</button>
+      </div>
+      <div class="row">
+        <button class="key" id="strumDown">Rasgueo ↓</button>
+        <button class="key" id="strumUp">Rasgueo ↑</button>
+      </div>
+      <div class="hint">Hacia abajo empieza en la cuerda grave y suena más fuerte; hacia arriba, en la aguda y más suave.</div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Cómo se toca</h3>
+        <ul class="feat">
+          <li>Apila las notas del acorde en el piano roll; el plugin las separa como una uñeta.</li>
+          <li><b>RASGUEO</b> de seco a abierto. Si ya usaste el Strum de FL, ponlo en 0.</li>
+          <li>Patrones: Pop, Balada, Reggaetón, Rock, Arpegio, Bachata, Manual y 4 propios.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sonidos</h3>
+        <ul class="feat">
+          <li>Acústica, Nylon, Eléctrica y Crunch, sintetizadas (sin samples).</li>
+          <li>Tono, Cuerpo, Reverb, Velocidad y Humanize.</li>
+          <li>Es un instrumento: en FL va como canal, no en el mixer.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GPoint ===================== -->
+  <section class="plugin c-gpoint" id="gpoint">
+    <div class="num">05 // ARMÓNICOS</div>
+    <div class="head"><h2>GPoint</h2><span class="chip test">En pruebas</span></div>
+    <p class="sub">Busca el punto de color que más te gusta de tu voz y dale armónicos solo ahí.</p>
+
+    <div class="card visual">
+      <svg class="spec" id="spec" viewBox="0 0 600 260" role="img" aria-label="Espectro con 3 puntos movibles"></svg>
+      <div class="hint">Arrastra los 3 puntos: el nombre cambia según la zona (WEIGHT, WARMTH, CORE, BITE, SHINE, AIR).</div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Cada punto</h3>
+        <ul class="feat">
+          <li><b>WIDTH</b>: qué tan ancha es la zona.</li>
+          <li><b>DRIVE</b>: cuántos armónicos agrega.</li>
+          <li><b>CHARACTER</b>: Tube (cálido), Tape (suave) o Transistor (agresivo).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Trucos</h3>
+        <ul class="feat">
+          <li><b>Shift + clic</b> sobre un punto: escuchas solo esa franja.</li>
+          <li>Arrastrar: horizontal = frecuencia, vertical = drive.</li>
+          <li>MIX, OUTPUT y AUTO GAIN globales.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== Descargas ===================== -->
   <section class="plugin" id="descargas">
-    <div class="num">03</div>
+    <div class="num">// DESCARGAS</div>
     <h2>Descargas</h2>
     <p class="sub">Elige el plugin y tu sistema. Cada descarga es un .zip.</p>
 
     <div class="dl-grid">
-      <div class="card dl-card">
+      <div class="card dl-card c-noclipper">
         <h3>NoClipper</h3>
         <p class="fmt">VST3 (Windows y Mac) · AU (Mac)</p>
         <div class="btns">
@@ -233,7 +415,7 @@
           <a class="btn alt" href="https://github.com/Rixy657/Descargas/releases/latest/download/NoClipper-AU-macOS.zip">macOS <small>AU (Logic, GarageBand)</small></a>
         </div>
       </div>
-      <div class="card dl-card">
+      <div class="card dl-card c-autorevice">
         <h3>AutoReVice</h3>
         <p class="fmt">VST3 · AU · CLAP · LV2 · Standalone</p>
         <div class="btns">
@@ -241,6 +423,18 @@
           <a class="btn alt" href="https://github.com/Rixy657/Descargas/releases/latest/download/AutoReVice-macOS.zip">macOS <small>VST3 · AU · CLAP</small></a>
           <a class="btn alt" href="https://github.com/Rixy657/Descargas/releases/latest/download/AutoReVice-Linux.zip">Linux <small>VST3 · LV2 · CLAP</small></a>
         </div>
+      </div>
+      <div class="card dl-card c-moresub">
+        <h3>MoreSubstance</h3>
+        <p class="soon-dl">En pruebas. Disponible pronto para Windows, Mac y Linux.</p>
+      </div>
+      <div class="card dl-card c-guitar">
+        <h3>GuitarTowers</h3>
+        <p class="soon-dl">En pruebas. Disponible pronto para Windows, Mac y Linux.</p>
+      </div>
+      <div class="card dl-card c-gpoint">
+        <h3>GPoint</h3>
+        <p class="soon-dl">En pruebas. Disponible pronto para Windows, Mac y Linux.</p>
       </div>
     </div>
 
@@ -257,30 +451,6 @@
     </details>
   </section>
 
-  <!-- ===================== Próximamente ===================== -->
-  <section class="plugin" id="pronto">
-    <div class="num">04</div>
-    <h2>Próximamente</h2>
-    <p class="sub">En desarrollo.</p>
-    <div class="soon-grid">
-      <div class="card soon">
-        <span class="pill">En pruebas</span>
-        <h3>MoreSubstance</h3>
-        <p>Ear candy para la voz: Phone+, Delay Throw, Reverse, Stutter, Freeze, Tape Stop, Octave Down y Filter Sweep, listos para automatizar o disparar con MIDI.</p>
-      </div>
-      <div class="card soon">
-        <span class="pill">Diseño</span>
-        <h3>Guitar Tower</h3>
-        <p>Synth de guitarra para tocar acordes, con una perilla de rasgueo de suave a fuerte y patrones de pop, balada, reggaetón y arpegio.</p>
-      </div>
-      <div class="card soon">
-        <span class="pill">Idea</span>
-        <h3>GPoint</h3>
-        <p>Editor de armónicos para la voz: encuentra tus 3 puntos de color en el espectro y satúralos solo ahí.</p>
-      </div>
-    </div>
-  </section>
-
 </main>
 
 <footer>
@@ -290,75 +460,128 @@
 </footer>
 
 <script>
+var NS = 'http://www.w3.org/2000/svg';
+function el(name, attrs) { var e = document.createElementNS(NS, name); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+
+/* ---------- NoClipper: curva ---------- */
 (function () {
-  var svg = document.getElementById('curve');
-  var range = document.getElementById('thres');
-  var out = document.getElementById('thresOut');
-  var NS = 'http://www.w3.org/2000/svg';
-  var S = 400, PAD = 30, MAXIN = 1.5, MAXOUT = 1.2; // rango del dibujo
-
-  function clip(x, T) {
-    var a = Math.abs(x);
-    if (a <= T) return x;
-    var y = T + (1 - T) * (1 - Math.exp(-(a - T) / (1 - T)));
-    return x < 0 ? -y : y;
-  }
-  function X(v) { return PAD + (v / MAXIN) * (S - 2 * PAD); }
-  function Y(v) { return S - PAD - (v / MAXOUT) * (S - 2 * PAD); }
-  function el(name, attrs) {
-    var e = document.createElementNS(NS, name);
-    for (var k in attrs) e.setAttribute(k, attrs[k]);
-    return e;
-  }
-
+  var svg = document.getElementById('curve'), range = document.getElementById('thres'), out = document.getElementById('thresOut');
+  var W = 400, H = 300, PAD = 26, MAXIN = 1.5, MAXOUT = 1.2;
+  function clip(x, T) { var a = Math.abs(x); if (a <= T) return x; var y = T + (1 - T) * (1 - Math.exp(-(a - T) / (1 - T))); return x < 0 ? -y : y; }
+  function X(v) { return PAD + (v / MAXIN) * (W - 2 * PAD); }
+  function Y(v) { return H - PAD - (v / MAXOUT) * (H - 2 * PAD); }
   function draw() {
     var T = parseFloat(range.value);
-    var db = 20 * Math.log10(T);
-    out.textContent = db.toFixed(1) + ' dB';
+    out.textContent = (20 * Math.log10(T)).toFixed(1) + ' dB';
     while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-    var defs = el('defs', {});
-    var g = el('linearGradient', { id: 'g', x1: 0, y1: 1, x2: 1, y2: 0 });
-    g.appendChild(el('stop', { offset: '0', 'stop-color': '#ff2d55' }));
-    g.appendChild(el('stop', { offset: '1', 'stop-color': '#a855f7' }));
-    defs.appendChild(g);
-    svg.appendChild(defs);
-
-    // cuadrícula
     for (var i = 0; i <= 5; i++) {
-      var p = PAD + i * (S - 2 * PAD) / 5;
-      svg.appendChild(el('line', { x1: p, y1: PAD, x2: p, y2: S - PAD, stroke: '#2a1d3d', 'stroke-width': 1 }));
-      svg.appendChild(el('line', { x1: PAD, y1: p, x2: S - PAD, y2: p, stroke: '#2a1d3d', 'stroke-width': 1 }));
+      var px = PAD + i * (W - 2 * PAD) / 5, py = PAD + i * (H - 2 * PAD) / 5;
+      svg.appendChild(el('line', { x1: px, y1: PAD, x2: px, y2: H - PAD, stroke: '#2a1d3d' }));
+      svg.appendChild(el('line', { x1: PAD, y1: py, x2: W - PAD, y2: py, stroke: '#2a1d3d' }));
     }
-    // recta de referencia (sin procesar)
     svg.appendChild(el('line', { x1: X(0), y1: Y(0), x2: X(MAXOUT), y2: Y(MAXOUT), stroke: '#4a3a62', 'stroke-width': 1.5, 'stroke-dasharray': '5 5' }));
-    // línea del umbral
-    svg.appendChild(el('line', { x1: X(T), y1: Y(0), x2: X(T), y2: Y(MAXOUT), stroke: '#ff2d55', 'stroke-width': 1, 'stroke-dasharray': '3 4', opacity: .7 }));
-
-    // curva
+    svg.appendChild(el('line', { x1: X(T), y1: Y(0), x2: X(T), y2: Y(MAXOUT), stroke: '#ff2d55', 'stroke-dasharray': '3 4', opacity: .7 }));
     var d = '';
-    for (var n = 0; n <= 200; n++) {
-      var x = (n / 200) * MAXIN;
-      d += (n === 0 ? 'M' : 'L') + X(x).toFixed(1) + ' ' + Y(clip(x, T)).toFixed(1) + ' ';
-    }
-    svg.appendChild(el('path', { d: d, fill: 'none', stroke: 'url(#g)', 'stroke-width': 3.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
-
-    function txt(x, y, s, anchor) {
-      var t = el('text', { x: x, y: y, fill: '#9a8fb0', 'font-size': 11, 'text-anchor': anchor || 'start', 'font-family': 'system-ui, sans-serif' });
-      t.textContent = s;
-      svg.appendChild(t);
-    }
-    txt(S - PAD, S - 10, 'ENTRADA', 'end');
-    txt(PAD + 4, PAD - 10, 'SALIDA');
-    txt(X(T) + 6, Y(MAXOUT) + 14, 'umbral');
+    for (var n = 0; n <= 200; n++) { var x = (n / 200) * MAXIN; d += (n ? 'L' : 'M') + X(x).toFixed(1) + ' ' + Y(clip(x, T)).toFixed(1) + ' '; }
+    svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#ff2d55', 'stroke-width': 3.5, 'stroke-linecap': 'round' }));
+    var t = el('text', { x: W - PAD, y: H - 8, fill: '#9a8fb0', 'font-size': 11, 'text-anchor': 'end', 'font-family': 'system-ui' }); t.textContent = 'ENTRADA'; svg.appendChild(t);
+    t = el('text', { x: PAD + 4, y: PAD - 8, fill: '#9a8fb0', 'font-size': 11, 'font-family': 'system-ui' }); t.textContent = 'SALIDA'; svg.appendChild(t);
   }
+  range.addEventListener('input', draw); draw();
+})();
 
-  range.addEventListener('input', draw);
+/* ---------- MoreSubstance: islas ---------- */
+document.querySelectorAll('#islands .isle').forEach(function (b) {
+  b.addEventListener('click', function () { b.classList.toggle('on'); });
+});
+
+/* ---------- GuitarTowers: cuerdas ---------- */
+(function () {
+  var svg = document.getElementById('strings'), lines = [];
+  for (var i = 0; i < 6; i++) {
+    var y = 14 + i * 20;
+    var l = el('line', { x1: 8, y1: y, x2: 392, y2: y, 'stroke-width': 1 + (5 - i) * 0.45 });
+    l.style.transformBox = 'fill-box'; l.style.transformOrigin = 'center';
+    svg.appendChild(l); lines.push(l);
+  }
+  function strum(down) {
+    var order = down ? [0, 1, 2, 3, 4, 5] : [5, 4, 3, 2, 1, 0];
+    order.forEach(function (idx, k) {
+      setTimeout(function () { var l = lines[idx]; l.classList.remove('hit'); void l.getBBox(); l.classList.add('hit'); }, k * (down ? 28 : 22));
+    });
+  }
+  document.getElementById('strumDown').addEventListener('click', function () { strum(true); });
+  document.getElementById('strumUp').addEventListener('click', function () { strum(false); });
+  document.querySelectorAll('#chords .key').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#chords .key').forEach(function (x) { x.classList.remove('sel'); });
+      b.classList.add('sel');
+      document.getElementById('chord').textContent = b.dataset.c;
+      document.getElementById('chordNotes').textContent = b.dataset.n;
+      strum(true);
+    });
+  });
+})();
+
+/* ---------- GPoint: espectro con 3 puntos ---------- */
+(function () {
+  var svg = document.getElementById('spec'), W = 600, H = 260, L = 20, R = 580, TOP = 30, BOT = 230;
+  var colors = ['#33e4ff', '#3cf0c3', '#9ecbff'];
+  var pts = [{ f: 250, g: .55 }, { f: 2500, g: .7 }, { f: 10000, g: .45 }];
+  function fx(f) { return L + (Math.log10(f / 20) / 3) * (R - L); }
+  function xf(x) { return 20 * Math.pow(10, 3 * (x - L) / (R - L)); }
+  function zone(f) { return f < 200 ? 'WEIGHT' : f < 600 ? 'WARMTH' : f < 1500 ? 'CORE' : f < 4000 ? 'BITE' : f < 8000 ? 'SHINE' : 'AIR'; }
+  function voice(x) { var t = (x - L) / (R - L); return BOT - (120 * Math.exp(-Math.pow((t - .32) / .22, 2)) + 40 * Math.exp(-Math.pow((t - .62) / .1, 2)) + 18); }
+  function oy(p) { return BOT - 20 - p.g * 150; }
+  var drag = -1;
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    [100, 1000, 10000].forEach(function (f) {
+      svg.appendChild(el('line', { x1: fx(f), y1: TOP, x2: fx(f), y2: BOT, stroke: '#123542' }));
+      var t = el('text', { x: fx(f) + 4, y: BOT + 18, fill: '#4f8596', 'font-size': 11, 'font-family': 'system-ui' }); t.textContent = f >= 1000 ? f / 1000 + 'k' : f; svg.appendChild(t);
+    });
+    var lab = el('text', { x: L, y: 20, fill: '#4f8596', 'font-size': 11, 'letter-spacing': 2, 'font-family': 'system-ui' }); lab.textContent = 'SPECTRUM'; svg.appendChild(lab);
+    pts.forEach(function (p, i) {
+      var x = fx(p.f), w = 26 + p.g * 30;
+      svg.appendChild(el('rect', { x: x - w, y: TOP, width: 2 * w, height: BOT - TOP, fill: colors[i], opacity: .08 }));
+      for (var k = 1; k <= 5; k++) {
+        var hx = x + k * w * .55; if (hx > R) break;
+        var hh = p.g * 70 / k;
+        svg.appendChild(el('rect', { x: hx - 2, y: BOT - hh, width: 4, height: hh, fill: colors[i], opacity: .55, rx: 2 }));
+      }
+    });
+    var d = '';
+    for (var x = L; x <= R; x += 4) d += (x === L ? 'M' : 'L') + x + ' ' + voice(x).toFixed(1) + ' ';
+    svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#e8f9ff', 'stroke-width': 2, opacity: .85 }));
+    pts.forEach(function (p, i) {
+      var x = fx(p.f), y = oy(p);
+      var g = el('g', { class: 'orb' });
+      g.appendChild(el('circle', { cx: x, cy: y, r: 22, fill: colors[i], opacity: .18 }));
+      g.appendChild(el('circle', { cx: x, cy: y, r: 11, fill: colors[i], stroke: '#fff', 'stroke-width': 2 }));
+      var n = el('text', { x: x, y: y + 4, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 700, fill: '#04131a', 'font-family': 'system-ui' }); n.textContent = i + 1; g.appendChild(n);
+      var z = el('text', { x: x, y: y - 26, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 700, 'letter-spacing': 1.5, fill: colors[i], 'font-family': 'system-ui' }); z.textContent = zone(p.f); g.appendChild(z);
+      svg.appendChild(g);
+    });
+  }
+  function pos(e) { var r = svg.getBoundingClientRect(); return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height }; }
+  svg.addEventListener('pointerdown', function (e) {
+    var p = pos(e), best = -1, bd = 1e9;
+    pts.forEach(function (q, i) { var dx = fx(q.f) - p.x, dy = oy(q) - p.y, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } });
+    if (bd < 45 * 45) { drag = best; svg.setPointerCapture(e.pointerId); }
+  });
+  svg.addEventListener('pointermove', function (e) {
+    if (drag < 0) return;
+    var p = pos(e);
+    pts[drag].f = Math.min(18000, Math.max(30, xf(Math.min(R, Math.max(L, p.x)))));
+    pts[drag].g = Math.min(1, Math.max(.1, (BOT - 20 - p.y) / 150));
+    draw();
+  });
+  svg.addEventListener('pointerup', function () { drag = -1; });
+  svg.addEventListener('pointercancel', function () { drag = -1; });
   draw();
 })();
-</script>
-<script>
-// Activa solo los botones cuyo .zip ya está en el último release de Rixy657/Descargas
+
+/* ---------- Descargas: activa solo los botones cuyo .zip existe en el último release ---------- */
 (function () {
   var btns = document.querySelectorAll('#descargas a.btn');
   function off(a) { a.classList.add('off'); a.removeAttribute('href'); var s = a.querySelector('small'); if (s) s.textContent = 'Pronto'; }
