@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ViceMusic657 · Plugins de audio</title>
-<meta name="description" content="NoClipper y AutoReVice: plugins de audio VST3 hechos con JUCE.">
+<meta name="description" content="Descarga NoClipper y AutoReVice: plugins de audio VST3, AU y CLAP para Windows, Mac y Linux, hechos con JUCE.">
 <style>
   :root {
     --bg: #0a0710;
@@ -86,6 +86,31 @@
 
   .note { border-left: 3px solid var(--purple); padding: 8px 14px; background: rgba(168,85,247,.08); border-radius: 0 8px 8px 0; margin-top: 20px; }
 
+  /* Descargas */
+  .dl-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .dl-grid { grid-template-columns: 1fr 1fr; } }
+  .dl-card h3 { color: var(--text); font-size: 1.15rem; letter-spacing: 0; text-transform: none; margin-bottom: 2px; }
+  .dl-card .fmt { color: var(--muted); font-size: .85rem; margin: 0 0 14px; }
+  .btns { display: grid; gap: 10px; }
+  a.btn {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    min-height: 48px; padding: 10px 16px; border-radius: 10px; text-decoration: none;
+    background: var(--grad); color: #fff; font-weight: 700;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  a.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(255,45,85,.25); }
+  a.btn.alt { background: transparent; border: 1px solid var(--line); color: var(--text); font-weight: 600; }
+  a.btn.alt:hover { border-color: var(--purple); box-shadow: none; }
+  a.btn small { font-weight: 400; opacity: .8; font-size: .8rem; }
+  details.install { margin-top: 24px; }
+  details.install summary { cursor: pointer; font-weight: 700; padding: 12px 0; min-height: 44px; }
+  code { background: #1b1328; border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; font-size: .85em; word-break: break-all; }
+  .soon-grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 8px; }
+  @media (min-width: 760px) { .soon-grid { grid-template-columns: repeat(3, 1fr); } }
+  .soon h3 { color: var(--text); letter-spacing: 0; text-transform: none; font-size: 1.1rem; }
+  .soon p { margin: 0; color: var(--muted); font-size: .92rem; }
+  .pill { display: inline-block; font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: var(--red); border: 1px solid rgba(255,45,85,.4); border-radius: 999px; padding: 2px 10px; margin-bottom: 10px; }
+
   footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--muted); font-size: .85rem; }
 </style>
 </head>
@@ -98,6 +123,7 @@
       <a href="#noclipper">NoClipper</a>
       <a href="#autorevice">AutoReVice</a>
       <a href="#descargas">Descargas</a>
+      <a href="#pronto">Próximamente</a>
     </nav>
   </div>
 </header>
@@ -108,6 +134,7 @@
     <div class="eyebrow">Plugins de audio // VST3 · AU</div>
     <h1>Dos plugins hechos para <span>sonar bien</span> y estorbar poco.</h1>
     <p>Un soft clipper con la curva de FL Studio y un reverb + delay que se aparta cuando tocas o cantas y florece cuando paras. Hechos con JUCE y C++.</p>
+    <p style="margin-top:22px"><a class="btn" href="#descargas" style="display:inline-flex">Descargar plugins</a></p>
     <ul class="tags">
       <li>VST3</li>
       <li>AU (Mac)</li>
@@ -193,10 +220,63 @@
   <section class="plugin" id="descargas">
     <div class="num">03</div>
     <h2>Descargas</h2>
-    <p class="sub">Todavía no hay descargas públicas.</p>
-    <div class="card">
-      <p style="margin-top:0">Los dos plugins se compilan automáticamente para Windows y Mac (AutoReVice también para Linux) con GitHub Actions. Por ahora el código está en repositorios privados, así que aún no hay enlaces de descarga aquí.</p>
-      <p style="margin-bottom:0" class="muted">Cuando haya versiones listas para compartir, aparecerán en esta sección.</p>
+    <p class="sub">Elige el plugin y tu sistema. Cada descarga es un .zip.</p>
+
+    <div class="dl-grid">
+      <div class="card dl-card">
+        <h3>NoClipper</h3>
+        <p class="fmt">VST3 (Windows y Mac) · AU (Mac)</p>
+        <div class="btns">
+          <a class="btn" href="https://github.com/Rixy657/Descargas/releases/latest/download/NoClipper-VST3-windows-latest.zip">Windows <small>VST3</small></a>
+          <a class="btn alt" href="https://github.com/Rixy657/Descargas/releases/latest/download/NoClipper-VST3-macos-latest.zip">macOS <small>VST3</small></a>
+          <a class="btn alt" href="https://github.com/Rixy657/Descargas/releases/latest/download/NoClipper-AU-macOS.zip">macOS <small>AU (Logic, GarageBand)</small></a>
+        </div>
+      </div>
+      <div class="card dl-card">
+        <h3>AutoReVice</h3>
+        <p class="fmt">VST3 · AU · CLAP · LV2 · Standalone</p>
+        <div class="btns">
+          <a class="btn" href="https://github.com/Rixy657/Descargas/releases/latest/download/AutoReVice-Windows.zip">Windows <small>VST3 · CLAP · Standalone</small></a>
+          <a class="btn alt" href="https://github.com/Rixy657/Descargas/releases/latest/download/AutoReVice-macOS.zip">macOS <small>VST3 · AU · CLAP</small></a>
+          <a class="btn alt" href="https://github.com/Rixy657/Descargas/releases/latest/download/AutoReVice-Linux.zip">Linux <small>VST3 · LV2 · CLAP</small></a>
+        </div>
+      </div>
+    </div>
+
+    <details class="install card">
+      <summary>Cómo instalar</summary>
+      <ol class="steps">
+        <li>Descomprime el .zip.</li>
+        <li><b>Windows:</b> copia la carpeta <code>.vst3</code> a <code>C:\Program Files\Common Files\VST3</code>.</li>
+        <li><b>Mac:</b> copia el <code>.vst3</code> a <code>/Library/Audio/Plug-Ins/VST3</code> y el <code>.component</code> (AU) a <code>/Library/Audio/Plug-Ins/Components</code>.</li>
+        <li><b>Linux:</b> copia el <code>.vst3</code> a <code>~/.vst3</code> y el <code>.lv2</code> a <code>~/.lv2</code>.</li>
+        <li>Abre tu DAW y busca plugins nuevos. En <b>FL Studio</b>: Options → Manage plugins → Find installed plugins.</li>
+      </ol>
+      <div class="note"><b>En Mac:</b> los plugins no están firmados por Apple. Si macOS los bloquea, abre Terminal y ejecuta <code>xattr -cr /Library/Audio/Plug-Ins/VST3/NombreDelPlugin.vst3</code> (cambia el nombre por el del plugin).</div>
+    </details>
+  </section>
+
+  <!-- ===================== Próximamente ===================== -->
+  <section class="plugin" id="pronto">
+    <div class="num">04</div>
+    <h2>Próximamente</h2>
+    <p class="sub">En desarrollo.</p>
+    <div class="soon-grid">
+      <div class="card soon">
+        <span class="pill">En pruebas</span>
+        <h3>MoreSubstance</h3>
+        <p>Ear candy para la voz: Phone+, Delay Throw, Reverse, Stutter, Freeze, Tape Stop, Octave Down y Filter Sweep, listos para automatizar o disparar con MIDI.</p>
+      </div>
+      <div class="card soon">
+        <span class="pill">Diseño</span>
+        <h3>Guitar Tower</h3>
+        <p>Synth de guitarra para tocar acordes, con una perilla de rasgueo de suave a fuerte y patrones de pop, balada, reggaetón y arpegio.</p>
+      </div>
+      <div class="card soon">
+        <span class="pill">Idea</span>
+        <h3>GPoint</h3>
+        <p>Editor de armónicos para la voz: encuentra tus 3 puntos de color en el espectro y satúralos solo ahí.</p>
+      </div>
     </div>
   </section>
 
