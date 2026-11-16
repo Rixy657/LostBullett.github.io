@@ -101,6 +101,7 @@
   a.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(255,45,85,.25); }
   a.btn.alt { background: transparent; border: 1px solid var(--line); color: var(--text); font-weight: 600; }
   a.btn.alt:hover { border-color: var(--purple); box-shadow: none; }
+  a.btn.off { background: #1b1328; border: 1px dashed var(--line); color: var(--muted); pointer-events: none; }
   a.btn small { font-weight: 400; opacity: .8; font-size: .8rem; }
   details.install { margin-top: 24px; }
   details.install summary { cursor: pointer; font-weight: 700; padding: 12px 0; min-height: 44px; }
@@ -354,6 +355,20 @@
 
   range.addEventListener('input', draw);
   draw();
+})();
+</script>
+<script>
+// Activa solo los botones cuyo .zip ya está en el último release de Rixy657/Descargas
+(function () {
+  var btns = document.querySelectorAll('#descargas a.btn');
+  function off(a) { a.classList.add('off'); a.removeAttribute('href'); var s = a.querySelector('small'); if (s) s.textContent = 'Pronto'; }
+  fetch('https://api.github.com/repos/Rixy657/Descargas/releases/latest')
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (rel) {
+      var names = (rel.assets || []).map(function (x) { return x.name; });
+      btns.forEach(function (a) { var f = a.getAttribute('href').split('/').pop(); if (names.indexOf(f) < 0) off(a); });
+    })
+    .catch(function () { btns.forEach(off); });
 })();
 </script>
 </body>
