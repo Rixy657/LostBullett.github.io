@@ -71,7 +71,7 @@
 
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
   .card img { display: block; width: 100%; height: auto; border-radius: 8px; }
-  .visual { border-color: color-mix(in srgb, var(--acc) 35%, var(--line)); box-shadow: 0 20px 50px color-mix(in srgb, var(--acc) 10%, transparent); }
+  .visual { max-width: 620px; border-color: color-mix(in srgb, var(--acc) 35%, var(--line)); box-shadow: 0 20px 50px color-mix(in srgb, var(--acc) 10%, transparent); }
   .hint { color: var(--muted); font-size: .84rem; margin-top: 10px; }
 
   .cols { display: grid; gap: 24px; grid-template-columns: 1fr; margin-top: 24px; }
@@ -86,7 +86,7 @@
   .steps li { counter-increment: s; padding-left: 2.2rem; position: relative; margin: 10px 0; }
   .steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; font-size: .8rem; font-weight: 700; background: var(--acc); color: #fff; }
 
-  svg.curve { width: 100%; height: auto; display: block; background: #0d0814; border-radius: 8px; }
+  svg.curve { width: 100%; height: auto; max-height: 300px; display: block; background: #0d0814; border-radius: 8px; }
   .ctrl { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
   .ctrl label { font-size: .85rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
   .ctrl output { min-width: 5.5em; font-variant-numeric: tabular-nums; }
