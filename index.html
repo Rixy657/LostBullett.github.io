@@ -156,6 +156,19 @@
   .c-guitar     { --acc: #ffb547; }
   .c-gpoint     { --acc: #33e4ff; }
   .c-eco       { --acc: #e6eaf0; }
+
+  /* Apoyo (donaciones) */
+  .support { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 20px;
+    border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin: 0 0 56px;
+    background: linear-gradient(90deg, rgba(255,45,85,.10), rgba(168,85,247,.10)); }
+  .support p { margin: 0; color: var(--muted); max-width: 36rem; }
+  .support p b { color: var(--text); }
+  a.give { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 20px; border-radius: 999px;
+    text-decoration: none; font-weight: 800; color: #fff; background: var(--grad); box-shadow: 0 8px 24px rgba(255,45,85,.25);
+    transition: transform .15s ease, filter .15s ease; }
+  a.give:hover { transform: translateY(-1px); filter: brightness(1.1); }
+  a.give small { font-weight: 500; opacity: .85; }
+  nav a.nav-give { color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
   .c-guitar a.btn, .c-gpoint a.btn, .c-eco a.btn, .c-guitar .steps li::before { color: #111; }
 
   /* EcoBack */
@@ -179,6 +192,7 @@
     <nav>
       <a href="#plugins">Plugins</a>
       <a href="#descargas">Descargas</a>
+      <a class="nav-give" href="#apoyar">Apoyar</a>
     </nav>
   </div>
 </header>
@@ -229,6 +243,11 @@
       <span class="d">Graba, elige el pedazo y arrastra el eco o el riser al Playlist.</span>
       <span class="chip test">En pruebas</span>
     </a>
+  </div>
+
+  <div class="support" id="apoyar">
+    <p><b>Los plugins son gratis.</b> Si te sirven y quieres que salgan más, puedes apoyar con lo que quieras.</p>
+    <a class="give" href="https://link.mercadopago.cl/vicemusic" target="_blank" rel="noopener">Apoya a ViceMusic <small>· Mercado Pago</small></a>
   </div>
 
   <!-- ===================== NoClipper ===================== -->
@@ -516,6 +535,11 @@
       </ol>
       <div class="note"><b>En Mac:</b> los plugins no están firmados por Apple. Si macOS los bloquea, abre Terminal y ejecuta <code>xattr -cr /Library/Audio/Plug-Ins/VST3/NombreDelPlugin.vst3</code> (cambia el nombre por el del plugin).</div>
     </details>
+
+    <div class="support" style="margin: 24px 0 0">
+      <p><b>¿Te sirvió?</b> Los plugins son gratis; tu apoyo ayuda a hacer los que vienen.</p>
+      <a class="give" href="https://link.mercadopago.cl/vicemusic" target="_blank" rel="noopener">Apoya a ViceMusic <small>· Mercado Pago</small></a>
+    </div>
   </section>
 
 </main>
