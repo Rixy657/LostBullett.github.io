@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ViceMusic657 · Plugins de audio</title>
-<meta name="description" content="Plugins de audio de ViceMusic: NoClipper, AutoReVice, MoreSubstance, GuitarTowers y GPoint. VST3, AU y CLAP para Windows, Mac y Linux.">
+<meta name="description" content="Plugins de audio de ViceMusic: NoClipper, AutoReVice, MoreSubstance, GuitarTowers, GPoint y EcoBack (EchoBack). VST3, AU y CLAP para Windows, Mac y Linux.">
 <style>
   :root {
     --bg: #08060d;
@@ -46,7 +46,7 @@
 
   .catalog { display: grid; gap: 14px; grid-template-columns: 1fr; padding: 28px 0 56px; }
   @media (min-width: 640px) { .catalog { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 980px) { .catalog { grid-template-columns: repeat(5, 1fr); } }
+  @media (min-width: 980px) { .catalog { grid-template-columns: repeat(3, 1fr); } }
   a.tile {
     display: flex; flex-direction: column; gap: 6px; text-decoration: none;
     background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 10%, var(--panel)), var(--panel2));
@@ -155,7 +155,20 @@
   .c-moresub    { --acc: #a855f7; }
   .c-guitar     { --acc: #ffb547; }
   .c-gpoint     { --acc: #33e4ff; }
-  .c-guitar a.btn, .c-gpoint a.btn, .c-guitar .steps li::before { color: #111; }
+  .c-eco       { --acc: #e6eaf0; }
+  .c-guitar a.btn, .c-gpoint a.btn, .c-eco a.btn, .c-guitar .steps li::before { color: #111; }
+
+  /* EcoBack */
+  .eco-modes { display: flex; gap: 8px; flex-wrap: wrap; }
+  .eco-modes button.key { background: linear-gradient(180deg, #2a2d33, #121418); border-color: #3a3f46; }
+  .eco-modes button.key.sel { color: #0d0f12; background: linear-gradient(180deg, #ffffff, #c3c9d2); border-color: #fff; }
+  .eco-ctrls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-top: 12px; }
+  .eco-ctrls[hidden] { display: none; }
+  .eco-ctrls label { font-size: .78rem; letter-spacing: .14em; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .eco-ctrls select { font: inherit; font-size: .9rem; color: #fff; background: #24272c; border: 1px solid #3a3f46; border-radius: 8px; padding: 8px 10px; min-height: 40px; }
+  svg.eco { width: 100%; height: auto; display: block; background: linear-gradient(180deg, #0b0d10, #151a20); border-radius: 10px; margin-top: 12px; }
+  .eco-play { margin-top: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .eco-play button.key { color: #0d0f12; background: linear-gradient(180deg, #ffffff, #c3c9d2); border-color: #fff; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -175,7 +188,7 @@
   <div class="hero">
     <div class="eyebrow">Plugins de audio // VST3 · AU · CLAP</div>
     <h1>Plugins para que tu música <span>suene distinta</span>.</h1>
-    <p>Cinco herramientas para voces, beats y guitarras: saturación, efectos que se apartan solos, ear candy, acordes rasgueados y color armónico. Hechas con JUCE y pensadas para FL Studio, pero funcionan en cualquier DAW.</p>
+    <p>Seis herramientas para voces, beats y guitarras: saturación, efectos que se apartan solos, ear candy, acordes rasgueados, color armónico y ecos que se arrastran al Playlist. Hechas con JUCE y pensadas para FL Studio, pero funcionan en cualquier DAW.</p>
   </div>
 
   <!-- ===================== Catálogo ===================== -->
@@ -208,6 +221,12 @@
       <span class="kind">Armónicos · Voz</span>
       <strong>GPoint</strong>
       <span class="d">Encuentra el punto de color de tu voz y satúralo solo ahí.</span>
+      <span class="chip test">En pruebas</span>
+    </a>
+    <a class="tile c-eco" href="#ecoback">
+      <span class="kind">Pre-eco · Riser</span>
+      <strong>EcoBack</strong>
+      <span class="d">Graba, elige el pedazo y arrastra el eco o el riser al Playlist.</span>
       <span class="chip test">En pruebas</span>
     </a>
   </div>
@@ -399,6 +418,50 @@
     </div>
   </section>
 
+  <!-- ===================== EcoBack ===================== -->
+  <section class="plugin c-eco" id="ecoback">
+    <div class="num">06 // VOZ</div>
+    <div class="head"><h2>EcoBack</h2><span class="chip test">En pruebas</span></div>
+    <p class="sub">Graba tu voz, elige el pedazo y arrastra al Playlist un pre-eco o un riser ya hecho. Como un mini Edison para ecos.</p>
+
+    <div class="card visual">
+      <div class="eco-modes">
+        <button class="key sel" data-mode="eco">PRE-ECO <small>· repite el inicio</small></button>
+        <button class="key" data-mode="riser">RISER <small>· reverse reverb</small></button>
+      </div>
+      <div class="eco-ctrls" id="ecoCtrlsEco">
+        <label>GRILLA <select id="ecoGrid"><option>1/8</option><option selected>1/16</option><option>1/32</option><option>1/16T</option></select></label>
+        <label>PATRÓN <select id="ecoPat"><option>PAREJO</option><option selected>ACELERA</option><option>FRENA</option><option>SWING</option></select></label>
+        <label>REPETIR <select id="ecoReps"><option>2</option><option>3</option><option selected>4</option><option>6</option><option>8</option></select></label>
+      </div>
+      <div class="eco-ctrls" id="ecoCtrlsRiser" hidden>
+        <label>LARGO <select id="ecoLen"><option>1/4</option><option selected>1/2</option><option>1 COMPÁS</option></select></label>
+        <label>FORMA <select id="ecoForm"><option>SUAVE</option><option selected>EXPLOSIVA</option><option>ONDA</option></select></label>
+      </div>
+      <svg class="eco" id="ecoSvg" viewBox="0 0 600 200" role="img" aria-label="Grilla del Playlist con las repeticiones antes de la palabra"></svg>
+      <div class="eco-play"><button class="key" id="ecoListen">▶ Escuchar ejemplo</button><span class="hint" style="margin:0">Suena a 120 BPM con una voz de ejemplo.</span></div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Cómo funciona</h3>
+        <ul class="feat">
+          <li><b>REC</b> graba la voz; al parar elige solo el inicio de la primera palabra (el <b>PEDAZO</b>).</li>
+          <li>Elige el modo, escucha con <b>PREVIEW</b> y arrastra el resultado directo al Playlist de FL.</li>
+          <li>Toma el tempo de FL y la grabación queda guardada con el proyecto.</li>
+          <li>Guarda tus patrones: sirven con cualquier grabación y en cualquier proyecto.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Dos modos</h3>
+        <ul class="feat">
+          <li><b>PRE-ECO</b>: repite el inicio de la palabra antes de que entre. Grilla con tresillos, patrón, 2 a 8 repeticiones con pitch, paneo y largo propios, Phone, Chorus, Reverb, Delay y Distorsión.</li>
+          <li><b>RISER</b>: reverse reverb que sube hasta la palabra. Forma, textura, sube tono, filtro, de-esser, Phone, Chorus y movimiento (trémolo o paneo).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== Descargas ===================== -->
   <section class="plugin" id="descargas">
     <div class="num">// DESCARGAS</div>
@@ -434,6 +497,10 @@
       </div>
       <div class="card dl-card c-gpoint">
         <h3>GPoint</h3>
+        <p class="soon-dl">En pruebas. Disponible pronto para Windows, Mac y Linux.</p>
+      </div>
+      <div class="card dl-card c-eco">
+        <h3>EcoBack</h3>
         <p class="soon-dl">En pruebas. Disponible pronto para Windows, Mac y Linux.</p>
       </div>
     </div>
@@ -578,6 +645,94 @@ document.querySelectorAll('#islands .isle').forEach(function (b) {
   });
   svg.addEventListener('pointerup', function () { drag = -1; });
   svg.addEventListener('pointercancel', function () { drag = -1; });
+  draw();
+})();
+
+/* ---------- EcoBack: grilla + ejemplo que suena ---------- */
+(function () {
+  var svg = document.getElementById('ecoSvg'), W = 600, H = 200, mode = 'eco', ctx = null;
+  var $ = function (id) { return document.getElementById(id); };
+  var gridSteps = { '1/8': 2, '1/16': 1, '1/32': 0.5, '1/16T': 2 / 3 };
+  function ints() {
+    var n = +$('ecoReps').value, base = gridSteps[$('ecoGrid').value], p = $('ecoPat').value, out = [];
+    for (var i = 0; i < n; i++) {
+      var t = n > 1 ? i / (n - 1) : 0;
+      out.push(p === 'PAREJO' ? base : p === 'ACELERA' ? base * (2 - 1.5 * t) : p === 'FRENA' ? base * (0.5 + 1.5 * t) : (i % 2 ? base * 0.5 : base * 1.5));
+    }
+    return out;
+  }
+  function riserSteps() { return { '1/4': 4, '1/2': 8, '1 COMPÁS': 16 }[$('ecoLen').value]; }
+  function shape(t) { var f = $('ecoForm').value; return f === 'SUAVE' ? Math.pow(t, 1.6) : f === 'ONDA' ? t * t * (0.72 + 0.28 * Math.sin(t * 18.85 - 1.2)) : Math.pow(t, 4) * 0.85 + 0.15 * Math.pow(t, 12); }
+  function layout() {
+    if (mode === 'eco') {
+      var iv = ints(), span = iv.reduce(function (a, b) { return a + b; }, 0);
+      return { pre: Math.max(8, Math.ceil(span / 4 - 1e-9) * 4), iv: iv, span: span };
+    }
+    return { pre: riserSteps() };
+  }
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var L = layout(), pre = L.pre, Wst = pre + 4, px = W / Wst, off = Math.ceil(pre / 16) * 16 - pre;
+    svg.appendChild(el('rect', { x: 0, y: 0, width: W, height: 18, fill: 'rgba(255,255,255,.04)' }));
+    for (var st = 0; st <= Wst; st++) {
+      var rel = st + off, bar = rel % 16 === 0, beat = rel % 4 === 0;
+      if (!beat && px < 7) continue;
+      svg.appendChild(el('line', { x1: st * px, y1: 0, x2: st * px, y2: H, stroke: 'rgba(255,255,255,' + (bar ? .28 : beat ? .13 : .05) + ')' }));
+      if (beat && st < Wst) { var bn = Math.floor(rel / 16) + 1, be = Math.floor((rel % 16) / 4) + 1; var t = el('text', { x: st * px + 4, y: 13, fill: be === 1 ? '#e8ecf2' : '#6f7782', 'font-size': 10, 'font-weight': 700, 'font-family': 'system-ui' }); t.textContent = be === 1 ? bn : bn + '.' + be; svg.appendChild(t); }
+    }
+    var top = 34, bh = 130;
+    if (mode === 'eco') {
+      var cur = pre - L.span, n = L.iv.length, minI = Math.min.apply(null, L.iv), rw = Math.max(10, Math.min(30, minI * px - 3));
+      for (var i = 0; i < n; i++) {
+        var vol = n > 1 ? -9 + 9 * i / (n - 1) : 0, h = bh * (14 + (vol + 12) * 8.8) / 120, x = cur * px + 1;
+        svg.appendChild(el('rect', { x: x, y: top + bh - h, width: rw, height: h, rx: 3, fill: '#e6eaf0', style: 'filter: drop-shadow(0 0 5px rgba(240,244,250,.5))' }));
+        var nt = el('text', { x: x + rw / 2, y: top + bh - h - 6, 'text-anchor': 'middle', fill: '#8b939e', 'font-size': 10, 'font-weight': 700, 'font-family': 'system-ui' }); nt.textContent = i + 1; svg.appendChild(nt);
+        cur += L.iv[i];
+      }
+    } else {
+      var d = 'M0 ' + (top + bh);
+      for (var k = 0; k <= 120; k++) { var tt = k / 120; d += ' L' + (tt * pre * px).toFixed(1) + ' ' + (top + bh - shape(tt) * bh).toFixed(1); }
+      d += ' L' + (pre * px) + ' ' + (top + bh) + ' Z';
+      svg.appendChild(el('path', { d: d, fill: 'rgba(230,234,240,.25)', stroke: '#fff', 'stroke-width': 1.6 }));
+    }
+    svg.appendChild(el('rect', { x: pre * px + 1, y: top, width: 4 * px - 6, height: bh, rx: 3, fill: '#59616d' }));
+    var w = el('text', { x: pre * px + 2 * px, y: top + bh + 16, 'text-anchor': 'middle', fill: '#a3abb6', 'font-size': 10, 'font-weight': 700, 'font-family': 'system-ui' }); w.textContent = 'PALABRA'; svg.appendChild(w);
+  }
+  function syllable(t0, gain, pan, dur, pitch) {
+    var o = ctx.createOscillator(), o2 = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain(), p = ctx.createStereoPanner();
+    o.type = 'sawtooth'; o2.type = 'square'; o.frequency.value = 196 * pitch; o2.frequency.value = 98 * pitch;
+    f.type = 'bandpass'; f.frequency.setValueAtTime(700, t0); f.frequency.linearRampToValueAtTime(1300, t0 + dur); f.Q.value = 2.5;
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(gain, t0 + 0.008); g.gain.setValueAtTime(gain, t0 + dur * 0.7); g.gain.linearRampToValueAtTime(0, t0 + dur);
+    p.pan.value = pan;
+    o.connect(f); o2.connect(f); f.connect(g); g.connect(p); p.connect(ctx.destination);
+    o.start(t0); o2.start(t0); o.stop(t0 + dur + 0.02); o2.stop(t0 + dur + 0.02);
+  }
+  function listen() {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    var step = 60 / 120 / 4, t0 = ctx.currentTime + 0.1, L = layout();
+    if (mode === 'eco') {
+      var cur = L.pre - L.span, n = L.iv.length;
+      for (var i = 0; i < n; i++) { var vol = n > 1 ? -9 + 9 * i / (n - 1) : 0; syllable(t0 + cur * step, 0.22 * Math.pow(10, vol / 20), i % 2 ? 0.6 : -0.6, Math.min(0.11, L.iv[i] * step * 0.95), 1); cur += L.iv[i]; }
+    } else {
+      var len = L.pre * step, buf = ctx.createBuffer(1, Math.ceil(len * ctx.sampleRate), ctx.sampleRate), d = buf.getChannelData(0);
+      for (var k = 0; k < d.length; k++) d[k] = (Math.random() * 2 - 1) * shape(k / d.length) * 0.35;
+      var src = ctx.createBufferSource(), f = ctx.createBiquadFilter();
+      f.type = 'lowpass'; f.frequency.setValueAtTime(300, t0); f.frequency.exponentialRampToValueAtTime(9000, t0 + len);
+      src.buffer = buf; src.connect(f); f.connect(ctx.destination); src.start(t0);
+    }
+    syllable(t0 + L.pre * step, 0.25, 0, 0.45, 1);
+  }
+  document.querySelectorAll('.eco-modes .key').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.eco-modes .key').forEach(function (x) { x.classList.remove('sel'); });
+      b.classList.add('sel'); mode = b.dataset.mode;
+      $('ecoCtrlsEco').hidden = mode !== 'eco'; $('ecoCtrlsRiser').hidden = mode === 'eco';
+      draw();
+    });
+  });
+  ['ecoGrid', 'ecoPat', 'ecoReps', 'ecoLen', 'ecoForm'].forEach(function (id) { $(id).addEventListener('change', draw); });
+  $('ecoListen').addEventListener('click', listen);
   draw();
 })();
 
