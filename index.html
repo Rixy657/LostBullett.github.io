@@ -35,7 +35,14 @@
   header.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 60px; }
   .brand { font-weight: 800; letter-spacing: .18em; font-size: .95rem; text-transform: uppercase; text-decoration: none; }
   .brand b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  nav a { text-decoration: none; color: var(--muted); margin-left: 18px; font-size: .9rem; }
+  nav { display: flex; align-items: center; gap: 16px; flex-wrap: nowrap; }
+  nav a { text-decoration: none; color: var(--muted); font-size: .9rem; white-space: nowrap; }
+  @media (max-width: 480px) {
+    .brand { font-size: .82rem; letter-spacing: .12em; }
+    nav { gap: 10px; }
+    nav a { font-size: .85rem; }
+    nav a.nav-plugins { display: none; }
+  }
   nav a:hover { color: var(--text); }
 
   .hero { padding: 64px 0 28px; }
@@ -44,7 +51,7 @@
   h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hero p { color: var(--muted); max-width: 42rem; font-size: 1.05rem; margin: 0; }
 
-  .catalog { display: grid; gap: 14px; grid-template-columns: 1fr; padding: 28px 0 56px; }
+  .catalog { display: grid; gap: 14px; grid-template-columns: 1fr; padding: 28px 0 24px; }
   @media (min-width: 640px) { .catalog { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 980px) { .catalog { grid-template-columns: repeat(3, 1fr); } }
   a.tile {
@@ -190,7 +197,7 @@
   <div class="wrap">
     <a class="brand" href="#">Vice<b>Music657</b></a>
     <nav>
-      <a href="#plugins">Plugins</a>
+      <a class="nav-plugins" href="#plugins">Plugins</a>
       <a href="#descargas">Descargas</a>
       <a class="nav-give" href="#apoyar">Apoyar</a>
     </nav>
